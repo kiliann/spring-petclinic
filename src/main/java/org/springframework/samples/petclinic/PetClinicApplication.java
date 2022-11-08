@@ -16,20 +16,60 @@
 
 package org.springframework.samples.petclinic;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.samples.petclinic.vet.DAO.Specialty;
+import org.springframework.samples.petclinic.vet.DTO.SpecialtyRepository;
+import org.springframework.samples.petclinic.vet.DAO.Vet;
+import org.springframework.samples.petclinic.vet.DTO.VetRepository;
 
 /**
  * PetClinic Spring Boot Application.
  *
  * @author Dave Syer
- *
  */
+
+@Slf4j
 @SpringBootApplication
 public class PetClinicApplication {
 
 	public static void main(String[] args) {
+		log.info("prueba");
 		SpringApplication.run(PetClinicApplication.class, args);
+	}
+
+	@Bean
+	public CommandLineRunner demoVetRepository(VetRepository vetRepository, SpecialtyRepository specialtyRepository) {
+		return (args) -> {
+			log.info("*****************************************************");
+			log.info("BOOTCAMP - Spring y Spring Data - vetRepository");
+			log.info("*****************************************************");
+
+			log.info("Creamos un objeto Vet");
+			Vet vet = new Vet();
+			vet.setFirstName("Sergio");
+			vet.setLastName("Raposo Vargas");
+
+			log.info("Persistimos en BBDD");
+			vetRepository.save(vet);
+
+			log.info("Comprobamos que se ha creado correctamente");
+			Vet vetAux = vetRepository.findById(vet.getId());
+			log.info(vetAux.toString());
+			log.info("Editamos el objeto y añadimos una Speciality");
+			Specialty s = specialtyRepository.findById(1);
+			vet.addSpecialty(s);
+			vetRepository.save(vet);
+			log.info(vet.toString());
+
+			log.info("Listamos todos los veterinarios");
+			for (Vet v : vetRepository.findAll()) {
+				log.info("Vet: " + v);
+			}
+		};
 	}
 
 }

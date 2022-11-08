@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.vet;
+package org.springframework.samples.petclinic.vet.DTO;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.samples.petclinic.vet.DAO.Vet;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Repository class for <code>Vet</code> domain objects All method names are compliant
@@ -54,5 +57,15 @@ public interface VetRepository extends Repository<Vet, Integer> {
 	@Transactional(readOnly = true)
 	@Cacheable("vets")
 	Page<Vet> findAll(Pageable pageable) throws DataAccessException;
+
+	List<Vet> findByLastName(String lastName);
+
+	List<Vet> findByFirstNameAndLastName(String firstName, String lastName);
+
+	List<Vet> findByFirstNameOrLastName(String firstName, String lastName);
+
+	void save(Vet vet);
+
+	Vet findById(@Param("id") Integer id);
 
 }
