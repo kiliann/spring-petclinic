@@ -42,6 +42,9 @@ public class Visit extends BaseEntity {
 	@NotEmpty
 	private String description;
 
+	@Column(name = "bill_id")
+	private Integer bill_id;
+
 	/**
 	 * Creates a new instance of Visit for the current date
 	 */
